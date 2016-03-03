@@ -6,6 +6,8 @@ public enum EJoueur { VERTICAL = 0, HORIZONTAL = 1 };
 public class Game : MonoBehaviour {
     [SerializeField]
     private PanelBoard _panelBoard;
+    [SerializeField]
+    private CanvasGroup _panelGame;
 
 
     [SerializeField]
@@ -31,9 +33,11 @@ public class Game : MonoBehaviour {
 
     public void Update() {
         if (this._isPlayerPlayed) {
+            _panelGame.blocksRaycasts = false;
             _ai.Move(_board);
             _panelBoard.Display();
             this._isPlayerPlayed = false;
+            _panelGame.blocksRaycasts = true;
         }
     }
 
