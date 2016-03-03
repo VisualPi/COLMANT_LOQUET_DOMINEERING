@@ -5,6 +5,10 @@ public enum EJoueur { VERTICAL = 0, HORIZONTAL = 1 };
 
 public class Game : MonoBehaviour {
     [SerializeField]
+    private PanelBoard _panelBoard;
+
+
+    [SerializeField]
     private int _nbPlayer;
     [SerializeField]
     private int _height;
@@ -22,11 +26,13 @@ public class Game : MonoBehaviour {
         this._width = w;
         _board = new Board(h, w);
         _ai = new AI(algo);
+        _panelBoard.Init(_board, this);
     }
 
     public void Update() {
         if (this._isPlayerPlayed) {
             _ai.Move(_board);
+            _panelBoard.Display();
             this._isPlayerPlayed = false;
         }
     }
@@ -39,38 +45,41 @@ public class Game : MonoBehaviour {
     }
 
     public bool MovePlayer(Coordonnee c, EJoueur joueur = EJoueur.VERTICAL) {
+        bool valReturn = true;
         if (joueur == EJoueur.VERTICAL) {
-            Debug.Log(_board[c.x].Count);
             if (_board[c.x][c.y] || _board[c.x + 1][c.y])
-                return false;
+                valReturn = false;
             else {
                 _board[c.x][c.y] = true;
                 _board[c.x + 1][c.y] = true;
             }
         } else {
             if (_board[c.x][c.y] || _board[c.x][c.y + 1])
-                return false;
+                valReturn = false;
             else {
                 _board[c.x][c.y] = true;
                 _board[c.x][c.y + 1] = true;
             }
         }
-        return true;
+        _panelBoard.Display();
+        return valReturn;
     }
     public bool UndoMovePlayer(Coordonnee c, EJoueur joueur = EJoueur.VERTICAL) {
+        bool valReturn = true;
         if (joueur == EJoueur.VERTICAL) {
             if (_board[c.x][c.y] && _board[c.x + 1][c.y]) {
                 _board[c.x][c.y] = false;
                 _board[c.x + 1][c.y] = false;
             } else
-                return false;
+                valReturn = false;
         } else {
             if (_board[c.x][c.y] && _board[c.x][c.y + 1]) {
                 _board[c.x][c.y] = false;
                 _board[c.x][c.y + 1] = false;
             } else
-                return false;
+                valReturn = false;
         }
-        return true;
+        _panelBoard.Display();
+        return valReturn;
     }
 }
