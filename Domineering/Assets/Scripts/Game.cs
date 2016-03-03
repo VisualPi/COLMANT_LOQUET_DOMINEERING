@@ -8,6 +8,7 @@ public class Game : MonoBehaviour
 	[SerializeField] private int _nbPlayer;
 	[SerializeField] private int _height;
 	[SerializeField] private int _width;
+	//[SerializeField] private EJoueur _playerDirection;
 	private Board _board;
 	private bool _isPlayerPlayed;
 	private AI _ai;
@@ -23,7 +24,8 @@ public class Game : MonoBehaviour
 	{
 		if(this._isPlayerPlayed)
 		{
-
+			_ai.Move(_board);
+			this._isPlayerPlayed = false;
 		}
 	}
 

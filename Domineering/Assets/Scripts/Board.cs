@@ -11,24 +11,35 @@ public class Board {
 	{
 		this._height = h;
 		this._width = w;
-	}
-
-	void Start () {
-		for (int i = 0 ; i < _height ; i++ )
+		for( int i = 0 ; i < _height ; i++ )
 			_board.Add(new List<bool>(_width));
 	}
 
     public void SetHeight(int height){
         _height = height;
     }
-
-    public void SetWidth(int width) {
+	public int GetHeight()
+	{
+		return _height;
+	}
+	public void SetWidth(int width) {
         _width = width;
     }
+	public int GetWidth()
+	{
+		return _width;
+	}
 	public List<bool> this[int key]
 	{
 		get	{ return _board[key]; }
 		set	{ _board[key] = value; }
 	}
-
+	public void SetBoard(List<List<bool>> board)
+	{
+		this._board = board;
+	}
+	public List<List<bool>> GetBoard()
+	{
+		return this._board;
+	}
 }
