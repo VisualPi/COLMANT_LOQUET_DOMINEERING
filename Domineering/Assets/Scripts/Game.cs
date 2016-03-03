@@ -51,14 +51,14 @@ public class Game : MonoBehaviour {
     public bool MovePlayer(Coordonnee c, EJoueur joueur = EJoueur.VERTICAL) {
         bool valReturn = true;
         if (joueur == EJoueur.VERTICAL) {
-            if (c.line + 1 >= _board.GetLines() && (_board[c.line][c.column] || _board[c.line + 1][c.column]))
+            if (c.line + 1 >= _board.GetLines() && _board[c.line][c.column] || _board[c.line + 1][c.column])
                 valReturn = false;
             else {
                 _board[c.line][c.column] = true;
                 _board[c.line + 1][c.column] = true;
             }
         } else {
-            if (c.column + 1 >= _board.GetColumns() && (_board[c.line][c.column] || _board[c.line][c.column + 1]))
+            if (c.column + 1 >= _board.GetColumns() && _board[c.line][c.column] || _board[c.line][c.column + 1])
                 valReturn = false;
             else {
                 _board[c.line][c.column] = true;
