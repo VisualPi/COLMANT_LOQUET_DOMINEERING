@@ -35,16 +35,19 @@ public class PanelBoard : MonoBehaviour {
 
     public void Init() {
         _case = _column * _line;
-
-        for (int i = 0; i < _case; i++)
-            _popCell();
+        
+        for (var i = 0; i < _cases.Count; ++i) {
+            var currentLine = i % _column;
+            _popCell(currentLine, i - currentLine);
+        }
     }
 
-    private void _popCell() {
+    private void _popCell(int line, int column) {
         var cell = Instantiate(ItemCase).GetComponent<PanelCase>();
         cell.IsSelected = true;
         cell.transform.SetParent(_contentPanel, false);
-
+        cell.Init(new Coordonnee { x = column, y = line });
+        
         _cases.Add(cell);
     }
 }
