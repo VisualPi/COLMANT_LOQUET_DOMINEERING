@@ -12,7 +12,11 @@ public class Game : MonoBehaviour
 	private Board _board;
 	private bool _isPlayerPlayed;
 	private AI _ai;
-	Game(int nb, int h, int w, EAiAlgo algo = EAiAlgo.BASIC)
+	public void Start()
+	{
+		Init(1, 8, 8);
+	}
+	public void Init(int nb, int h, int w, EAiAlgo algo = EAiAlgo.BASIC)
 	{
 		this._height = h;
 		this._width = w;
