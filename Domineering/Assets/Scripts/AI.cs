@@ -28,6 +28,7 @@ public class AI
 	public bool Move(Board b)
 	{
 		Coordonnee retCoord = new Coordonnee{ line = -1, column = -1};
+		Coordonnee outCoord;
 		switch( _algo )
 		{
 		case EAiAlgo.EVALUATION:
@@ -35,9 +36,9 @@ public class AI
 			List<Coordonnee> vecAI = SimulateMove(b, false);
 			foreach( var move in vecAI )
 			{
-				Play(b, move);
+				Play(b, move, false);
 				essais.Add(new essai(Evaluation(b, EPlayer.HORIZONTAL), move));
-				Undo(b, move);
+				Undo(b, move, false);
 			}
 			if( essais.Count != 0 )
 			{
@@ -46,11 +47,12 @@ public class AI
 			}
 			break;
 		case EAiAlgo.MINAMAX:
-			Coordonnee outCoord;
-			if(Max(3, b, out outCoord) >= 0)
+			if( Max(3, b, out outCoord) >= 0 )
 				retCoord = outCoord;
-            break;
+			break;
 		case EAiAlgo.NEGAMAX:
+			if( Negamax(3, b, out outCoord, EPlayer.HORIZONTAL) >= 0 )
+				retCoord = outCoord;
 			break;
 		case EAiAlgo.ALPHABETA:
 			break;
@@ -61,7 +63,7 @@ public class AI
 		}
 		if( retCoord.line != -1 )
 		{
-			Play(b, retCoord);
+			Play(b, retCoord, false);
 			return true;
 		}
 		return false;
@@ -130,15 +132,31 @@ public class AI
 		return retV;
 	}
 
-	private void Play(Board b, Coordonnee c)
+	private void Play(Board b, Coordonnee c, bool simulatePlayer)
 	{
-		b[c.line][c.column] = true;
-		b[c.line][c.column + 1] = true;
+		if( simulatePlayer )
+		{
+			b[c.line][c.column] = true;
+			b[c.line + 1][c.column] = true;
+		}
+		else
+		{
+			b[c.line][c.column] = true;
+			b[c.line][c.column + 1] = true;
+		}
 	}
-	private void Undo(Board b, Coordonnee c)
+	private void Undo(Board b, Coordonnee c, bool simulatePlayer)
 	{
-		b[c.line][c.column] = false;
-		b[c.line][c.column + 1] = false;
+		if( simulatePlayer )
+		{
+			b[c.line][c.column] = false;
+			b[c.line + 1][c.column] = false;
+		}
+		else
+		{
+			b[c.line][c.column] = false;
+			b[c.line][c.column + 1] = false;
+		}
 	}
 
 	public int Max(int depth, Board b, out Coordonnee c)
@@ -150,11 +168,11 @@ public class AI
 		}
 		int eval = -1;
 		Coordonnee dumb;
-		foreach (var move in SimulateMove(b, false))
+		foreach( var move in SimulateMove(b, false) )
 		{
-			Play(b, move);
-            int e = Min(depth-1, b, out dumb);
-			Undo(b, move);
+			Play(b, move, false);
+			int e = Min(depth-1, b, out dumb);
+			Undo(b, move, false);
 			if( e > eval )
 			{
 				c = move;
@@ -172,12 +190,35 @@ public class AI
 		}
 		int eval = +10000;
 		Coordonnee dumb;
-		foreach( var move in SimulateMove(b, false) )
+		foreach( var move in SimulateMove(b, true) )
 		{
-			Play(b, move);
+			Play(b, move, true);
 			int e = Max(depth-1, b, out dumb);
-			Undo(b, move);
+			Undo(b, move, true);
 			if( e < eval )
+			{
+				c = move;
+				eval = e;
+			}
+		}
+		return eval;
+	}
+
+	public int Negamax(int depth, Board b, out Coordonnee c, EPlayer player)
+	{
+		c = new Coordonnee();
+		if( depth == 0 )
+		{
+			return Evaluation(b, player);
+		}
+		int eval = -2;
+		Coordonnee dumb;
+		foreach( var move in SimulateMove(b, player == EPlayer.HORIZONTAL ? false : true) )
+		{
+			Play(b, move, player == EPlayer.HORIZONTAL ? false : true );
+			int e = -Negamax(depth-1, b, out dumb,player == EPlayer.HORIZONTAL ? EPlayer.VERTICAL : EPlayer.HORIZONTAL );
+			Undo(b, move, player == EPlayer.HORIZONTAL ? false : true);
+			if( e > eval )
 			{
 				c = move;
 				eval = e;
