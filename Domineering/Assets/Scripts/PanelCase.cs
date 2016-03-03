@@ -25,7 +25,7 @@ public class PanelCase : MonoBehaviour {
     public void MouseEnter() {
         if (!IsSelected) {
             isTmp = true;
-            _game.MovePlayer(_myCoordonnee);
+			_game.MovePlayer(_myCoordonnee);
         }
     }
 

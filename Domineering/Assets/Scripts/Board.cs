@@ -3,35 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Board {
-    [SerializeField] private int _height  = 8;
-    [SerializeField] private int _width   = 8;
+    [SerializeField] private int _lines  = 8;
+    [SerializeField] private int _columns   = 8;
 	private List<List<bool>> _board;
 
-	public Board(int h, int w)
+	public Board(int l, int c)
 	{
 		_board = new List<List<bool>>();
-		this._height = h;
-		this._width = w;
-	    for (int i = 0; i < _height; i++) {
-	        _board.Add(new List<bool>(_width));
-            for (int j = 0; j < _width; j++)
+		this._lines = l;
+		this._columns = c;
+	    for (int i = 0; i < _lines ; i++) {
+	        _board.Add(new List<bool>(_lines));
+            for (int j = 0; j < _columns ; j++)
                 _board[i].Add(false);
 	    }
 	}
 
-    public void SetHeight(int height){
-        _height = height;
+    public void SetLines(int lines){
+		_lines = lines;
     }
-	public int GetHeight()
+	public int GetLines()
 	{
-		return _height;
+		return _lines;
 	}
-	public void SetWidth(int width) {
-        _width = width;
+	public void SetColumns(int columns) {
+		_columns = columns;
     }
-	public int GetWidth()
+	public int GetColumns()
 	{
-		return _width;
+		return _columns;
 	}
 	public List<bool> this[int key]
 	{

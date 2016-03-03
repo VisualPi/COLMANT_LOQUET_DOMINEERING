@@ -34,15 +34,15 @@ public class AI
 			List<Coordonnee> vecAI = SimulateMove(b, false);
 			for( int i = 0 ; i < vecAI.Count ; i++ )
 			{
-				Board tmp = new Board(b.GetHeight(), b.GetWidth());
+				Board tmp = new Board(b.GetLines(), b.GetColumns());
 				tmp.SetBoard(b.GetBoard());
-				tmp[vecAI[i].x][vecAI[i].y] = true;
-				tmp[vecAI[i].x][vecAI[i].y + 1] = true;
+				tmp[vecAI[i].line][vecAI[i].column] = true;
+				tmp[vecAI[i].line][vecAI[i].column + 1] = true;
 				essais.Add(new essai(SimulateMove(tmp, false).Count - SimulateMove(tmp, true).Count, vecAI[i]));
 			}
 			essais.Min(es => es.result);
-			b[essais[0].c.x][essais[0].c.y] = true;
-			b[essais[0].c.x][essais[0].c.y + 1] = true;
+			b[essais[0].c.line][essais[0].c.column] = true;
+			b[essais[0].c.line][essais[0].c.column + 1] = true;
 			break;
 		case EAiAlgo.MINAMAX:
 			break;
@@ -55,7 +55,7 @@ public class AI
 		default:
 			break;
 		}
-		return new Coordonnee { x = 0, y = 0 };
+		return new Coordonnee { line = 0, column = 0 };
 	}
 
 	public List<Coordonnee> SimulateMove(Board b, bool simulatePlayer)//if true, simulate player's turn
@@ -65,23 +65,23 @@ public class AI
 		{
 			if( this._direction == EJoueur.HORIZONTAL)
 			{//joueur est vertical
-				for( int i = 0 ; i < b.GetHeight() - 1 ; ++i )
+				for( int i = 0 ; i < b.GetLines() - 1 ; ++i )
 				{
 					for( int j = 0 ; j < b[i].Count ; ++j )
 					{
 						if( b[i][j] == false && b[i + 1][j] == false )
-							retV.Add(new Coordonnee { x = i, y = j });
+							retV.Add(new Coordonnee { line = i, column = j });
 					}
 				}
 			}
 			else
 			{//joueur est horizontal
-				for( int i = 0 ; i < b.GetHeight() ; ++i )
+				for( int i = 0 ; i < b.GetLines() ; ++i )
 				{
 					for( int j = 0 ; j < b[i].Count - 1 ; ++j )
 					{
 						if( b[i][j] == false && b[i][j + 1] == false )
-							retV.Add(new Coordonnee { x = i, y = j });
+							retV.Add(new Coordonnee { line = i, column = j });
 					}
 				}
 			}
@@ -90,23 +90,23 @@ public class AI
 		{
 			if( this._direction == EJoueur.HORIZONTAL )
 			{
-				for( int i = 0 ; i < b.GetHeight() ; ++i )
+				for( int i = 0 ; i < b.GetLines() ; ++i )
 				{
 					for( int j = 0 ; j < b[i].Count - 1 ; ++j )
 					{
 						if( b[i][j] == false && b[i][j + 1] == false )
-							retV.Add(new Coordonnee { x = i, y = j });
+							retV.Add(new Coordonnee { line = i, column = j });
 					}
 				}
 			}
 			else
 			{
-				for( int i = 0 ; i < b.GetHeight() - 1 ; ++i )
+				for( int i = 0 ; i < b.GetLines() - 1 ; ++i )
 				{
 					for( int j = 0 ; j < b[i].Count ; ++j )
 					{
 						if( b[i][j] == false && b[i + 1][j] == false )
-							retV.Add(new Coordonnee { x = i, y = j });
+							retV.Add(new Coordonnee { line = i, column = j });
 					}
 				}
 			}

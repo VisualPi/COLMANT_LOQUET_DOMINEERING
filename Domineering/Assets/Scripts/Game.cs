@@ -11,9 +11,9 @@ public class Game : MonoBehaviour {
     [SerializeField]
     private int _nbPlayer;
     [SerializeField]
-    private int _height;
+    private int _lines;
     [SerializeField]
-    private int _width;
+    private int _columns;
     //[SerializeField] private EJoueur _playerDirection;
     private Board _board;
     private bool _isPlayerPlayed;
@@ -21,10 +21,10 @@ public class Game : MonoBehaviour {
     public void Start() {
         Init(1, 8, 8);
     }
-    public void Init(int nb, int h, int w, EAiAlgo algo = EAiAlgo.BASIC) {
-        this._height = h;
-        this._width = w;
-        _board = new Board(h, w);
+    public void Init(int nb, int l, int c, EAiAlgo algo = EAiAlgo.BASIC) {
+        this._lines = l;
+        this._columns = c;
+        _board = new Board(l, c);
         _ai = new AI(algo);
         _panelBoard.Init(_board, this);
     }
@@ -47,18 +47,18 @@ public class Game : MonoBehaviour {
     public bool MovePlayer(Coordonnee c, EJoueur joueur = EJoueur.VERTICAL) {
         bool valReturn = true;
         if (joueur == EJoueur.VERTICAL) {
-            if (_board[c.x][c.y] || _board[c.x + 1][c.y])
+            if (_board[c.line][c.column] || _board[c.line + 1][c.column])
                 valReturn = false;
             else {
-                _board[c.x][c.y] = true;
-                _board[c.x + 1][c.y] = true;
+                _board[c.line][c.column] = true;
+                _board[c.line + 1][c.column] = true;
             }
         } else {
-            if (_board[c.x][c.y] || _board[c.x][c.y + 1])
+            if (_board[c.line][c.column] || _board[c.line][c.column + 1])
                 valReturn = false;
             else {
-                _board[c.x][c.y] = true;
-                _board[c.x][c.y + 1] = true;
+                _board[c.line][c.column] = true;
+                _board[c.line][c.column + 1] = true;
             }
         }
         _panelBoard.Display();
@@ -67,15 +67,15 @@ public class Game : MonoBehaviour {
     public bool UndoMovePlayer(Coordonnee c, EJoueur joueur = EJoueur.VERTICAL) {
         bool valReturn = true;
         if (joueur == EJoueur.VERTICAL) {
-            if (_board[c.x][c.y] && _board[c.x + 1][c.y]) {
-                _board[c.x][c.y] = false;
-                _board[c.x + 1][c.y] = false;
+            if (_board[c.line][c.column] && _board[c.line + 1][c.column]) {
+                _board[c.line][c.column] = false;
+                _board[c.line + 1][c.column] = false;
             } else
                 valReturn = false;
         } else {
-            if (_board[c.x][c.y] && _board[c.x][c.y + 1]) {
-                _board[c.x][c.y] = false;
-                _board[c.x][c.y + 1] = false;
+            if (_board[c.line][c.column] && _board[c.line][c.column + 1]) {
+                _board[c.line][c.column] = false;
+                _board[c.line][c.column + 1] = false;
             } else
                 valReturn = false;
         }

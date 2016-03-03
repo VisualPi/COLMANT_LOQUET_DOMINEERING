@@ -1,4 +1,4 @@
 ﻿public struct Coordonnee {
-    public int x;
-	public int y;
+    public int line;
+	public int column;
 }
