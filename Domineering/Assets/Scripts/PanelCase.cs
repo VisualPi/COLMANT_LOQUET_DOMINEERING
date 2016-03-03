@@ -35,4 +35,9 @@ public class PanelCase : MonoBehaviour {
             _game.UndoMovePlayer(_myCoordonnee);
         }
     }
+
+    public void MouseClick() {
+        isTmp = false;
+        _game.SetIsPlayerPlayed(true);
+    }
 }

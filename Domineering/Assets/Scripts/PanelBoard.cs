@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class PanelBoard : MonoBehaviour {
-    private int _case = 0;
     [SerializeField]
     private GridLayoutGroup _glg;
     [SerializeField]
@@ -11,6 +10,8 @@ public class PanelBoard : MonoBehaviour {
     [SerializeField]
     private Transform _contentPanel;
     private Game _game;
+    [SerializeField]
+    private RectTransform _rt;
 
     [SerializeField]
     private List<PanelCase> _cases = new List<PanelCase>();
@@ -29,9 +30,8 @@ public class PanelBoard : MonoBehaviour {
     public void Init(Board board, Game game) {
         _game = game;
         _board = board;
-        _case = _board.GetLines() * _board.GetColumns();
         _glg.constraintCount = _board.GetLines();
-        //_glg.cellSize = Vector2.one * Mathf.RoundToInt(100 * _board.GetWidth() / _board.GetHeight()+1);
+        _glg.cellSize = Vector2.one * Mathf.RoundToInt(_rt.rect.height / _board.GetLines());
 
         for (var curColumn = 0; curColumn < _board.GetLines(); ++curColumn)
             for (var curLine = 0; curLine < _board.GetColumns(); ++curLine)
