@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum EJoueur { VERTICAL = 0, HORIZONTAL = 1 };
+public enum EPlayer { VERTICAL = 0, HORIZONTAL = 1 };
 
 public class Game : MonoBehaviour {
     [SerializeField]
@@ -23,7 +23,7 @@ public class Game : MonoBehaviour {
     public void Start() {
         Init(1, 8, 8);
     }
-    public void Init(int nb, int l, int c, EAiAlgo algo = EAiAlgo.BASIC) {
+    public void Init(int nb, int l, int c, EAiAlgo algo = EAiAlgo.EVALUATION) {
         this._lines = l;
         this._columns = c;
         _board = new Board(l, c);
@@ -48,9 +48,9 @@ public class Game : MonoBehaviour {
         return this._isPlayerPlayed;
     }
 
-    public bool MovePlayer(Coordonnee c, EJoueur joueur = EJoueur.VERTICAL) {
+    public bool MovePlayer(Coordonnee c, EPlayer player = EPlayer.VERTICAL) {
         bool valReturn = true;
-        if (joueur == EJoueur.VERTICAL) {
+        if ( player == EPlayer.VERTICAL) {
             if (c.line + 1 >= _board.GetLines() && _board[c.line][c.column] || _board[c.line + 1][c.column])
                 valReturn = false;
             else {
@@ -68,9 +68,9 @@ public class Game : MonoBehaviour {
         _panelBoard.Display();
         return valReturn;
     }
-    public bool UndoMovePlayer(Coordonnee c, EJoueur joueur = EJoueur.VERTICAL) {
+    public bool UndoMovePlayer(Coordonnee c, EPlayer player = EPlayer.VERTICAL) {
         bool valReturn = true;
-        if (joueur == EJoueur.VERTICAL) {
+        if ( player == EPlayer.VERTICAL) {
             if (c.line + 1 < _board.GetLines() && (_board[c.line][c.column] && _board[c.line + 1][c.column])) {
                 _board[c.line][c.column] = false;
                 _board[c.line + 1][c.column] = false;

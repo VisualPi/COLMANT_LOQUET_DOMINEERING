@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public enum EAiAlgo {BASIC = 0, MINAMAX, NEGAMAX, ALPHABETA, KILLER};
+public enum EAiAlgo { EVALUATION = 0, MINAMAX, NEGAMAX, ALPHABETA, KILLER };
 
 class essai
 {
@@ -18,47 +18,58 @@ class essai
 
 public class AI
 {
-	[SerializeField] EJoueur _direction = EJoueur.HORIZONTAL;
-	[SerializeField] EAiAlgo _algo;
+	EPlayer _direction = EPlayer.HORIZONTAL;
+	EAiAlgo _algo;
 	public AI(EAiAlgo algo)
 	{
 		this._algo = algo;
 	}
 
-	public Coordonnee Move(Board b)
+	public bool Move(Board b)
 	{
-		switch(_algo)
+		Coordonnee retCoord = new Coordonnee{ line = -1, column = -1};
+		switch( _algo )
 		{
-		case EAiAlgo.BASIC:
+		case EAiAlgo.EVALUATION:
 			List< essai > essais = new List<essai>();
 			List<Coordonnee> vecAI = SimulateMove(b, false);
-			for( int i = 0 ; i < vecAI.Count ; i++ )
+			foreach( var move in vecAI )
 			{
-				Board tmp = new Board(b.GetLines(), b.GetColumns());
-				tmp.SetBoard(b.GetBoard());
-				tmp[vecAI[i].line][vecAI[i].column] = true;
-				tmp[vecAI[i].line][vecAI[i].column + 1] = true;
-				essais.Add(new essai(SimulateMove(tmp, false).Count - SimulateMove(tmp, true).Count, vecAI[i]));
+				Play(b, move);
+				essais.Add(new essai(Evaluation(b, EPlayer.HORIZONTAL), move));
+				Undo(b, move);
 			}
-			if(essais.Count == 0)
-				return new Coordonnee { line = 0, column = 0 };
-			essai e = (essai)essais.OrderBy(es => es.result).First();
-			b[e.c.line][e.c.column] = true;
-			b[e.c.line][e.c.column + 1] = true;
-			return new Coordonnee { line = e.c.line, column = e.c.column };
+			if( essais.Count != 0 )
+			{
+				essai e = (essai)essais.OrderBy(es => es.result).First();
+				retCoord = e.c;
+			}
 			break;
 		case EAiAlgo.MINAMAX:
+
 			break;
 		case EAiAlgo.NEGAMAX:
 			break;
-        case EAiAlgo.ALPHABETA:
+		case EAiAlgo.ALPHABETA:
 			break;
 		case EAiAlgo.KILLER:
 			break;
 		default:
 			break;
 		}
-		return new Coordonnee { line = 0, column = 0 };
+		if( retCoord.line != -1 )
+		{
+			Play(b, retCoord);
+			return true;
+		}
+		return false;
+	}
+
+	public int Evaluation(Board b, EPlayer player)
+	{
+		return player == EPlayer.HORIZONTAL
+			? ( SimulateMove(b, false).Count - SimulateMove(b, true).Count )
+			: ( SimulateMove(b, true).Count - SimulateMove(b, false).Count );
 	}
 
 	public List<Coordonnee> SimulateMove(Board b, bool simulatePlayer)//if true, simulate player's turn
@@ -66,7 +77,7 @@ public class AI
 		List<Coordonnee> retV = new List<Coordonnee>();
 		if( simulatePlayer )
 		{
-			if( this._direction == EJoueur.HORIZONTAL)
+			if( this._direction == EPlayer.HORIZONTAL )
 			{//joueur est vertical
 				for( int i = 0 ; i < b.GetLines() - 1 ; ++i )
 				{
@@ -91,7 +102,7 @@ public class AI
 		}
 		else//pour ia
 		{
-			if( this._direction == EJoueur.HORIZONTAL )
+			if( this._direction == EPlayer.HORIZONTAL )
 			{
 				for( int i = 0 ; i < b.GetLines() ; ++i )
 				{
@@ -117,4 +128,23 @@ public class AI
 		return retV;
 	}
 
+	private void Play(Board b, Coordonnee c)
+	{
+		b[c.line][c.column] = true;
+		b[c.line][c.column + 1] = true;
+	}
+	private void Undo(Board b, Coordonnee c)
+	{
+		b[c.line][c.column] = false;
+		b[c.line][c.column + 1] = false;
+	}
+
+	//public essai Max(int depth, Board b)
+	//{
+	//	if( depth == 0 )
+	//	{
+	//		return Evaluation(b, EPlayer.HORIZONTAL);
+ //       }
+
+	//}
 }
