@@ -12,8 +12,11 @@ public class Board {
 		_board = new List<List<bool>>();
 		this._height = h;
 		this._width = w;
-		for( int i = 0 ; i < _height ; i++ )
-			_board.Add(new List<bool>(_width));
+	    for (int i = 0; i < _height; i++) {
+	        _board.Add(new List<bool>(_width));
+            for (int j = 0; j < _width; j++)
+                _board[i].Add(false);
+	    }
 	}
 
     public void SetHeight(int height){
