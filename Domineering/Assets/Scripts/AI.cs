@@ -46,8 +46,10 @@ public class AI
 			}
 			break;
 		case EAiAlgo.MINAMAX:
-
-			break;
+			Coordonnee outCoord;
+			if(Max(3, b, out outCoord) >= 0)
+				retCoord = outCoord;
+            break;
 		case EAiAlgo.NEGAMAX:
 			break;
 		case EAiAlgo.ALPHABETA:
@@ -139,12 +141,48 @@ public class AI
 		b[c.line][c.column + 1] = false;
 	}
 
-	//public essai Max(int depth, Board b)
-	//{
-	//	if( depth == 0 )
-	//	{
-	//		return Evaluation(b, EPlayer.HORIZONTAL);
- //       }
-
-	//}
+	public int Max(int depth, Board b, out Coordonnee c)
+	{
+		c = new Coordonnee();
+		if( depth == 0 )
+		{
+			return Evaluation(b, EPlayer.HORIZONTAL);
+		}
+		int eval = -1;
+		Coordonnee dumb;
+		foreach (var move in SimulateMove(b, false))
+		{
+			Play(b, move);
+            int e = Min(depth-1, b, out dumb);
+			Undo(b, move);
+			if( e > eval )
+			{
+				c = move;
+				eval = e;
+			}
+		}
+		return eval;
+	}
+	public int Min(int depth, Board b, out Coordonnee c)
+	{
+		c = new Coordonnee();
+		if( depth == 0 )
+		{
+			return Evaluation(b, EPlayer.VERTICAL);
+		}
+		int eval = +10000;
+		Coordonnee dumb;
+		foreach( var move in SimulateMove(b, false) )
+		{
+			Play(b, move);
+			int e = Max(depth-1, b, out dumb);
+			Undo(b, move);
+			if( e < eval )
+			{
+				c = move;
+				eval = e;
+			}
+		}
+		return eval;
+	}
 }

@@ -21,7 +21,7 @@ public class Game : MonoBehaviour {
     private bool _isPlayerPlayed;
     private AI _ai;
     public void Start() {
-        Init(1, 8, 8);
+        Init(1, 8, 8, EAiAlgo.MINAMAX);
     }
     public void Init(int nb, int l, int c, EAiAlgo algo = EAiAlgo.EVALUATION) {
         this._lines = l;
@@ -34,7 +34,10 @@ public class Game : MonoBehaviour {
     public void Update() {
         if (this._isPlayerPlayed) {
             _panelGame.blocksRaycasts = false;
-            _ai.Move(_board);
+			if( _ai.Move(_board) )
+				Debug.Log("AI Played");
+			else
+				Debug.Log("AI Loosed !");
             _panelBoard.Display();
             this._isPlayerPlayed = false;
             _panelGame.blocksRaycasts = true;
