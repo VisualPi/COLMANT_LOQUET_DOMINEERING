@@ -9,6 +9,7 @@ public class Board {
 
 	public Board(int h, int w)
 	{
+		_board = new List<List<bool>>();
 		this._height = h;
 		this._width = w;
 		for( int i = 0 ; i < _height ; i++ )
