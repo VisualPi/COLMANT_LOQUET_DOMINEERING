@@ -40,7 +40,13 @@ public class Board {
 	}
 	public void SetBoard(List<List<bool>> board)
 	{
-		this._board = board;
+		_board = new List<List<bool>>();
+		for( int i = 0 ; i < _lines ; i++ )
+		{
+			_board.Add(new List<bool>(_lines));
+			for( int j = 0 ; j < _columns ; j++ )
+				_board[i].Add(board[i][j]);
+		}
 	}
 	public List<List<bool>> GetBoard()
 	{

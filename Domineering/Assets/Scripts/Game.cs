@@ -86,4 +86,13 @@ public class Game : MonoBehaviour {
         _panelBoard.Display();
         return valReturn;
     }
+
+	public int GetLines()
+	{
+		return _lines;
+	}
+	public int GetColumns()
+	{
+		return _columns;
+	}
 }

@@ -25,14 +25,16 @@ public class PanelCase : MonoBehaviour {
     public void MouseEnter() {
         if (!IsSelected) {
             isTmp = true;
-			_game.MovePlayer(_myCoordonnee);
+			if(_myCoordonnee.line <= _game.GetLines()-2)
+				_game.MovePlayer(_myCoordonnee);
         }
     }
 
     public void MouseExit() {
         if (isTmp) {
             isTmp = true;
-            _game.UndoMovePlayer(_myCoordonnee);
+			if( _myCoordonnee.line <= _game.GetLines() - 2 )
+				_game.UndoMovePlayer(_myCoordonnee);
         }
     }
 
