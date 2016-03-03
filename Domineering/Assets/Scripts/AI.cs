@@ -40,9 +40,10 @@ public class AI
 				tmp[vecAI[i].line][vecAI[i].column + 1] = true;
 				essais.Add(new essai(SimulateMove(tmp, false).Count - SimulateMove(tmp, true).Count, vecAI[i]));
 			}
-			essais.Min(es => es.result);
-			b[essais[0].c.line][essais[0].c.column] = true;
-			b[essais[0].c.line][essais[0].c.column + 1] = true;
+			essai e = (essai)essais.OrderBy(es => es.result).First();
+			b[e.c.line][e.c.column] = true;
+			b[e.c.line][e.c.column + 1] = true;
+			return new Coordonnee { line = e.c.line, column = e.c.column };
 			break;
 		case EAiAlgo.MINAMAX:
 			break;

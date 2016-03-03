@@ -31,8 +31,8 @@ public class Game : MonoBehaviour {
 
     public void Update() {
         if (this._isPlayerPlayed) {
-            _ai.Move(_board);
-            _panelBoard.Display();
+            Coordonnee c = _ai.Move(_board);
+			_panelBoard.Display();
             this._isPlayerPlayed = false;
         }
     }
@@ -82,4 +82,13 @@ public class Game : MonoBehaviour {
         _panelBoard.Display();
         return valReturn;
     }
+
+	public int GetLines()
+	{
+		return _lines;
+	}
+	public int GetColumns()
+	{
+		return _columns;
+	}
 }
