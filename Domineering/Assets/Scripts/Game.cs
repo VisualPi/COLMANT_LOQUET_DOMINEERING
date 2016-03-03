@@ -21,7 +21,7 @@ public class Game : MonoBehaviour {
     private bool _isPlayerPlayed;
     private AI _ai;
     public void Start() {
-        Init(1, 8, 8, EAiAlgo.NEGAMAX);
+		Init(1, 8, 8, EAiAlgo.ALPHABETA);
     }
     public void Init(int nb, int l, int c, EAiAlgo algo = EAiAlgo.EVALUATION) {
         this._lines = l;

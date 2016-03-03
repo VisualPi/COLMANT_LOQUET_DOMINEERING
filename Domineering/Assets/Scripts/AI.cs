@@ -55,6 +55,10 @@ public class AI
 				retCoord = outCoord;
 			break;
 		case EAiAlgo.ALPHABETA:
+			int alpha = -8000, beta = 8000;
+			int eval;
+			if ((eval = NegamaxAlphaBeta (3, alpha, beta, b, out outCoord, EPlayer.HORIZONTAL)) >= 0)
+				retCoord = outCoord;
 			break;
 		case EAiAlgo.KILLER:
 			break;
@@ -225,5 +229,30 @@ public class AI
 			}
 		}
 		return eval;
+	}
+
+	public int NegamaxAlphaBeta(int depth, int alpha, int beta, Board b, out Coordonnee c, EPlayer player)
+	{
+		c = new Coordonnee();
+		if( depth == 0 )
+		{
+			return Evaluation(b, player);
+		}
+		int e;
+		Coordonnee dumb;
+		foreach( var move in SimulateMove(b, player == EPlayer.HORIZONTAL ? false : true) )
+		{
+			Play(b, move, player == EPlayer.HORIZONTAL ? false : true );
+			e = -NegamaxAlphaBeta(depth-1, -beta, -alpha, b, out dumb,player == EPlayer.HORIZONTAL ? EPlayer.VERTICAL : EPlayer.HORIZONTAL );
+			Undo(b, move, player == EPlayer.HORIZONTAL ? false : true);
+			if( e > alpha)
+			{
+				alpha = e;
+				c = move;
+				if(alpha >= beta)
+					return beta;
+			}
+		}
+		return alpha;
 	}
 }
