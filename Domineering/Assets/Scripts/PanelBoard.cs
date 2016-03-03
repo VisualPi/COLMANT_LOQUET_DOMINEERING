@@ -40,7 +40,7 @@ public class PanelBoard : MonoBehaviour {
 
     private void _popCell(int line, int column) {
         var cell = Instantiate(_itemCase).GetComponent<PanelCase>();
-        cell.IsSelected = true;
+        cell.IsSelected = _board[column][line];
         cell.transform.SetParent(_contentPanel, false);
         cell.Init(new Coordonnee { x = column, y = line }, _game);
 
