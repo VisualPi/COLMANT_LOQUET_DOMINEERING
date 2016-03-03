@@ -34,7 +34,7 @@ public class PanelCase : MonoBehaviour {
 
     public void MouseExit() {
         if (isTmp) {
-            isTmp = true;
+            isTmp = false;
 			if( _myCoordonnee.line <= _game.GetLines() - 2 )
 				_game.UndoMovePlayer(_myCoordonnee);
 			isMovePossible = false;

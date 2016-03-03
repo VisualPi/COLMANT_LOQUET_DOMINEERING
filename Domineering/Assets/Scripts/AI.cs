@@ -40,6 +40,8 @@ public class AI
 				tmp[vecAI[i].line][vecAI[i].column + 1] = true;
 				essais.Add(new essai(SimulateMove(tmp, false).Count - SimulateMove(tmp, true).Count, vecAI[i]));
 			}
+			if(essais.Count == 0)
+				return new Coordonnee { line = 0, column = 0 };
 			essai e = (essai)essais.OrderBy(es => es.result).First();
 			b[e.c.line][e.c.column] = true;
 			b[e.c.line][e.c.column + 1] = true;

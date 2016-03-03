@@ -33,8 +33,8 @@ public class PanelBoard : MonoBehaviour {
         _glg.constraintCount = _board.GetLines();
         _glg.cellSize = Vector2.one * Mathf.RoundToInt(_rt.rect.height / _board.GetLines());
 
-        for (var curColumn = 0; curColumn < _board.GetLines(); ++curColumn)
-            for (var curLine = 0; curLine < _board.GetColumns(); ++curLine)
+        for (var curLine = 0; curLine < _board.GetLines(); ++curLine )
+            for (var curColumn = 0; curColumn < _board.GetColumns(); ++curColumn )
                 _popCell(curLine, curColumn);
     }
 
@@ -42,7 +42,7 @@ public class PanelBoard : MonoBehaviour {
         var cell = Instantiate(_itemCase).GetComponent<PanelCase>();
         cell.IsSelected = _board[line][column];
         cell.transform.SetParent(_contentPanel, false);
-        cell.Init(new Coordonnee { line = column, column = line }, _game);
+        cell.Init(new Coordonnee { line = line, column = column }, _game);
 
         _cases.Add(cell);
     }
