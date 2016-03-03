@@ -6,10 +6,12 @@ public class PanelCase : MonoBehaviour {
     private Animator _animator;
 
     private bool isTmp;
+	private bool isMovePossible;
     private Coordonnee _myCoordonnee;
 
     void Start() {
         isTmp = false;
+		isMovePossible = false;
     }
 
     public void Init(Coordonnee coordonnee, Game game) {
@@ -26,7 +28,7 @@ public class PanelCase : MonoBehaviour {
         if (!IsSelected) {
             isTmp = true;
 			if(_myCoordonnee.line <= _game.GetLines()-2)
-				_game.MovePlayer(_myCoordonnee);
+				isMovePossible = _game.MovePlayer(_myCoordonnee);
         }
     }
 
@@ -35,11 +37,13 @@ public class PanelCase : MonoBehaviour {
             isTmp = true;
 			if( _myCoordonnee.line <= _game.GetLines() - 2 )
 				_game.UndoMovePlayer(_myCoordonnee);
+			isMovePossible = false;
         }
     }
 
     public void MouseClick() {
         isTmp = false;
-        _game.SetIsPlayerPlayed(true);
+		if( isMovePossible )
+			_game.SetIsPlayerPlayed(true);
     }
 }
