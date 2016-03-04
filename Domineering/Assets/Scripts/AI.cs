@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
-public enum EAiAlgo { EVALUATION = 0, MINAMAX, NEGAMAX, ALPHABETA, KILLER };
+public enum EAiAlgo { EVALUATION = 0, MINAMAX, NEGAMAX, ALPHABETA, ITERATEALPHABETA, KILLER };
 
 class essai
 {
@@ -60,7 +61,13 @@ public class AI
 			if ((eval = NegamaxAlphaBeta (3, alpha, beta, b, out outCoord, EPlayer.HORIZONTAL)) >= 0)
 				retCoord = outCoord;
 			break;
+		case EAiAlgo.ITERATEALPHABETA:
+			iterateAlphaBeta (b, out retCoord, EPlayer.HORIZONTAL, 5000f);
+			break;
 		case EAiAlgo.KILLER:
+			baseDepth = 3;
+			if ((NegamaxAlphaBetaKiller (3, -8000, 8000, b, out outCoord, EPlayer.HORIZONTAL)) >= 0)
+				retCoord = outCoord;
 			break;
 		default:
 			break;
@@ -255,4 +262,65 @@ public class AI
 		}
 		return alpha;
 	}
+
+	public int iterateAlphaBeta(Board b, out Coordonnee c, EPlayer player, float timer)
+	{
+		c = new Coordonnee ();
+		int i = 1;
+		int retValue = 0;
+		Coordonnee c2 = new Coordonnee();
+		System.Diagnostics.Stopwatch t = new System.Diagnostics.Stopwatch();
+		t.Start ();
+		Debug.Log ("je commence omg");
+		while (t.ElapsedMilliseconds <= timer) {
+			Thread thread = new Thread (()=>{retValue = NegamaxAlphaBeta(i++, -10000, 10000, b, out c2, player);});
+			thread.Start ();
+			if ((thread.Join((int)(timer-t.ElapsedMilliseconds)) && retValue > 0))
+				c = c2;
+		}
+		return retValue;
+	}
+
+	private List<KeyValuePair<int, Coordonnee>> killerMoves = new List<KeyValuePair<int, Coordonnee>>();
+	private int baseDepth;
+
+	public int NegamaxAlphaBetaKiller(int depth, int alpha, int beta, Board b, out Coordonnee c, EPlayer player)
+	{
+		c = new Coordonnee();
+		if( depth == 0 )
+		{
+			return Evaluation(b, player);
+		}
+		int e;
+		Coordonnee dumb;
+		List<Coordonnee> sims = SimulateMove (b, player == EPlayer.HORIZONTAL ? false : true);
+		KeyValuePair<int, Coordonnee> kvp = killerMoves.Find (f => f.Key == baseDepth - depth);
+		if ((killerMoves.Count > (baseDepth - depth)) && sims.Contains (kvp.Value)) {
+			sims.OrderBy(l => l.Equals(kvp.Value));
+			var tmp = sims [0];
+			for (int i = 0; i < sims.Count; i++) {
+				if (sims [i].line == kvp.Value.line && sims[i].column == kvp.Value.column) {
+					sims [0] = kvp.Value;
+					sims [i] = tmp;
+				}
+			}
+		}
+		foreach( var move in sims )
+		{
+			Play(b, move, player == EPlayer.HORIZONTAL ? false : true );
+			e = -NegamaxAlphaBetaKiller(depth-1, -beta, -alpha, b, out dumb,player == EPlayer.HORIZONTAL ? EPlayer.VERTICAL : EPlayer.HORIZONTAL );
+			Undo(b, move, player == EPlayer.HORIZONTAL ? false : true);
+			if( e > alpha)
+			{
+				alpha = e;
+				c = move;
+				if (alpha >= beta) {
+					killerMoves.Add(new KeyValuePair<int, Coordonnee>(baseDepth - depth, move));
+					return beta;
+				}
+			}
+		}
+		return alpha;
+	}
+
 }
